@@ -1,0 +1,9 @@
+# Render Blueprint: deploys this repo as a free static site.
+# In the Render dashboard: New → Blueprint → point it at this repo,
+# or create a Static Site manually with publish directory "." and no build command.
+services:
+  - type: web
+    name: holdem-trainer
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .

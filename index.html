@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hold'em Trainer — Learn Texas Hold'em</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♠️</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">♠ Hold'em Trainer</div>
+    <div class="topbar-stats">
+      <span class="stat"><span class="stat-label">Bankroll</span> <span id="hdr-bankroll">$0</span></span>
+      <span class="stat"><span class="stat-label">Blinds</span> <span id="hdr-blinds">$5/$10</span></span>
+      <span class="stat" id="hdr-session" title="Session results"><span class="stat-label">Hands</span> <span id="hdr-hands">0</span> · <span class="stat-label">Won</span> <span id="hdr-won">0</span> · <span id="hdr-pl">$0</span></span>
+    </div>
+    <div class="topbar-actions">
+      <button id="btn-coach" class="pill on">🎓 Coach: ON</button>
+      <button id="btn-guide" class="pill">📖 Guide</button>
+      <button id="btn-cashout" class="pill">💰 Cash out</button>
+    </div>
+  </header>
+
+  <main id="layout">
+    <section id="table-area">
+      <div id="table">
+        <div id="seats"></div>
+        <div id="center">
+          <div id="pot" class="hidden">Pot: $0</div>
+          <div id="board"></div>
+          <div id="table-msg"></div>
+        </div>
+      </div>
+
+      <div id="controls">
+        <div id="action-bar" class="hidden">
+          <div id="action-info"></div>
+          <div class="action-buttons">
+            <button id="btn-fold" class="act fold">Fold</button>
+            <button id="btn-check" class="act check">Check</button>
+            <button id="btn-call" class="act call">Call</button>
+            <button id="btn-raise" class="act raise">Raise</button>
+          </div>
+          <div id="raise-controls">
+            <div class="quick-sizes">
+              <button data-frac="min">Min</button>
+              <button data-frac="0.5">½ pot</button>
+              <button data-frac="0.75">¾ pot</button>
+              <button data-frac="1">Pot</button>
+              <button data-frac="allin">All-in</button>
+            </div>
+            <input type="range" id="raise-slider" step="5">
+          </div>
+        </div>
+        <div id="deal-bar" class="hidden">
+          <button id="btn-deal">Deal next hand</button>
+          <label class="auto-label"><input type="checkbox" id="auto-deal"> Auto-deal</label>
+        </div>
+      </div>
+    </section>
+
+    <aside id="sidebar">
+      <div id="coach-panel">
+        <div class="panel-title">🎓 Coach</div>
+        <div id="coach-body">
+          <p class="coach-idle">Cues appear here when it's your turn to act.</p>
+        </div>
+      </div>
+      <div id="log-panel">
+        <div class="panel-title">📜 Hand log</div>
+        <div id="log"></div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Welcome / buy-in overlay -->
+  <div id="overlay-welcome" class="overlay hidden">
+    <div class="modal">
+      <h2>♠ Welcome to Hold'em Trainer</h2>
+      <p>You have a <strong>$10,000</strong> practice bankroll (fake money). Buy into a 6-player table for <strong>$1,000</strong> and learn by playing against five bots with very different — and clearly labeled — playing styles.</p>
+      <ul class="welcome-list">
+        <li><strong>🎓 Coach mode</strong> shows you what to think about before every decision: position, hand strength, pot odds vs. your equity, and board dangers. A <em>suggested play</em> is hidden behind a button so you decide first.</li>
+        <li><strong>📖 Guide</strong> has hand rankings, a pot-odds mini-lesson, and how to exploit each bot.</li>
+        <li>Turn the coach off any time to test yourself.</li>
+      </ul>
+      <button id="btn-sit" class="primary">Buy in for $1,000 and play</button>
+    </div>
+  </div>
+
+  <!-- Bust / rebuy overlay -->
+  <div id="overlay-bust" class="overlay hidden">
+    <div class="modal">
+      <h2>😅 You're out of chips</h2>
+      <p id="bust-text"></p>
+      <button id="btn-rebuy" class="primary">Rebuy for $1,000</button>
+      <button id="btn-reset-bankroll" class="secondary hidden">Reset bankroll to $10,000</button>
+    </div>
+  </div>
+
+  <!-- Guide modal -->
+  <div id="overlay-guide" class="overlay hidden">
+    <div class="modal modal-wide">
+      <button class="modal-close" id="btn-guide-close">✕</button>
+      <h2>📖 Quick guide</h2>
+
+      <h3>How a hand works</h3>
+      <p>Two forced bets (small blind $5, big blind $10) start the pot. Everyone gets 2 private cards, then there are up to four betting rounds: <strong>preflop</strong> → <strong>flop</strong> (3 shared cards) → <strong>turn</strong> (1 more) → <strong>river</strong> (1 more). Best 5-card hand from your 2 + the 5 shared cards wins. You can also win by making everyone fold.</p>
+
+      <h3>Hand rankings (best → worst)</h3>
+      <ol class="rankings">
+        <li><strong>Royal / Straight Flush</strong> — five in a row, same suit</li>
+        <li><strong>Four of a Kind</strong> — e.g. 9 9 9 9</li>
+        <li><strong>Full House</strong> — three of a kind + a pair</li>
+        <li><strong>Flush</strong> — five of the same suit</li>
+        <li><strong>Straight</strong> — five in a row (A can be high or low)</li>
+        <li><strong>Three of a Kind</strong></li>
+        <li><strong>Two Pair</strong></li>
+        <li><strong>One Pair</strong></li>
+        <li><strong>High Card</strong></li>
+      </ol>
+
+      <h3>Position is power</h3>
+      <p>The dealer button (BTN) acts <em>last</em> after the flop — you see what everyone does before deciding. That's why you can play more hands from the button/cutoff (CO) and should play very tight from under the gun (UTG) and the blinds. The seat labels on the table (BTN, SB, BB, UTG, HJ, CO) update every hand.</p>
+
+      <h3>Pot odds in 20 seconds</h3>
+      <p>If you must call <strong>$20</strong> into an <strong>$80</strong> pot, you're paying 20 to win 100 → you need to win <strong>20%</strong> of the time to break even. Compare that to your chance of winning (the coach estimates it for you). Rule of thumb for draws: <strong>outs × 4</strong> ≈ your % on the flop (two cards to come), <strong>outs × 2</strong> on the turn.</p>
+
+      <h3>Know your opponents</h3>
+      <ul>
+        <li><strong>🪨 Rocky (tight & careful)</strong> — barely plays a hand. When he bets big, fold unless you're huge. Steal his blinds.</li>
+        <li><strong>🦈 Tanya (tight-aggressive)</strong> — the dangerous one. Solid hands, played hard. Avoid marginal spots against her.</li>
+        <li><strong>🃏 Loco (loose & wild)</strong> — raises with anything. Call down lighter, let him bluff into you, don't try to out-bluff him.</li>
+        <li><strong>📞 Callie (calling station)</strong> — never folds. <em>Never bluff her.</em> Value-bet even medium hands relentlessly.</li>
+        <li><strong>🎩 Prof (solid all-round)</strong> — balanced. Play straightforward poker.</li>
+      </ul>
+
+      <h3>Beginner rules of thumb</h3>
+      <ul>
+        <li>Fold most hands preflop. Tight is right while learning.</li>
+        <li>Enter pots with a raise, not a limp (call).</li>
+        <li>Bet your strong hands — don't "trap" as a habit; free cards beat you.</li>
+        <li>When a tight player raises you back, believe them.</li>
+        <li>Judge your decisions, not the result of one hand. Good decisions win over time.</li>
+      </ul>
+
+      <h3>Glossary</h3>
+      <p class="glossary"><strong>Check</strong> pass without betting · <strong>Call</strong> match the bet · <strong>Raise</strong> increase the bet · <strong>All-in</strong> bet everything · <strong>Equity</strong> your % chance to win the pot · <strong>Outs</strong> cards that complete your draw · <strong>C-bet</strong> a follow-up bet by the preflop raiser · <strong>Set</strong> three of a kind using a pocket pair · <strong>Range</strong> all hands someone could hold.</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
