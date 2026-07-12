@@ -9,16 +9,16 @@
 </head>
 <body>
   <header id="topbar">
-    <div class="brand">♠ Hold'em Trainer</div>
+    <div class="brand">♠ <span class="brand-text">Hold'em Trainer</span></div>
     <div class="topbar-stats">
       <span class="stat"><span class="stat-label">Bankroll</span> <span id="hdr-bankroll">$0</span></span>
-      <span class="stat"><span class="stat-label">Blinds</span> <span id="hdr-blinds">$5/$10</span></span>
+      <span class="stat stat-blinds"><span class="stat-label">Blinds</span> <span id="hdr-blinds">$5/$10</span></span>
       <span class="stat" id="hdr-session" title="Session results"><span class="stat-label">Hands</span> <span id="hdr-hands">0</span> · <span class="stat-label">Won</span> <span id="hdr-won">0</span> · <span id="hdr-pl">$0</span></span>
     </div>
     <div class="topbar-actions">
-      <button id="btn-coach" class="pill on">🎓 Coach: ON</button>
-      <button id="btn-guide" class="pill">📖 Guide</button>
-      <button id="btn-cashout" class="pill">💰 Cash out</button>
+      <button id="btn-coach" class="pill on">🎓 <span class="pill-text">Coach: ON</span></button>
+      <button id="btn-guide" class="pill">📖 <span class="pill-text">Guide</span></button>
+      <button id="btn-cashout" class="pill">💰 <span class="pill-text">Cash out</span></button>
     </div>
   </header>
 
@@ -60,7 +60,11 @@
       </div>
     </section>
 
-    <aside id="sidebar">
+    <aside id="sidebar" class="show-coach">
+      <div id="side-tabs">
+        <button id="tab-coach" class="side-tab active">🎓 Coach</button>
+        <button id="tab-log" class="side-tab">📜 Log</button>
+      </div>
       <div id="coach-panel">
         <div class="panel-title">🎓 Coach</div>
         <div id="coach-body">

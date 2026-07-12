@@ -26,7 +26,14 @@ body {
   flex-direction: column;
 }
 
-button { font: inherit; cursor: pointer; border: none; border-radius: 8px; }
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
 .hidden { display: none !important; }
 
 /* ===== Top bar ===== */
@@ -142,6 +149,8 @@ button { font: inherit; cursor: pointer; border: none; border-radius: 8px; }
 
 .seat .cards { display: flex; gap: 4px; justify-content: center; margin-bottom: 4px; min-height: 57px; }
 .seat-0 .cards { min-height: 74px; }
+/* The human's bet chip sits on the felt above their cards, not below. */
+.seat-0 .seat-tags { order: -1; }
 /* Top seats: cards hang below the name plate so they stay on the felt. */
 .seat-3 .cards, .seat-4 .cards { order: 2; margin-bottom: 0; margin-top: 4px; }
 .seat-3 .plate, .seat-4 .plate { order: 1; }
@@ -249,6 +258,18 @@ button { font: inherit; cursor: pointer; border: none; border-radius: 8px; }
   gap: 12px;
   min-height: 0;
 }
+#side-tabs { display: none; gap: 6px; }
+.side-tab {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid #2c3844;
+  color: var(--muted);
+  padding: 9px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.side-tab.active { color: var(--gold); border-color: var(--gold); }
 #coach-panel, #log-panel {
   background: var(--panel);
   border: 1px solid #2c3844;
@@ -356,21 +377,125 @@ button { font: inherit; cursor: pointer; border: none; border-radius: 8px; }
 }
 .modal-close:hover { color: var(--text); }
 
-/* ===== Responsive ===== */
+/* ===== Responsive =====
+   Three tiers:
+   1. ≤980px wide (phones/small tablets, portrait): single column, no page
+      scroll, tabbed Coach/Log panel below the action bar.
+   2. Compact elements (narrow OR short screens): smaller seats/cards, header
+      text collapses to icons.
+   3. Short landscape (phones rotated): two columns — table left, tabs right. */
+
 @media (max-width: 980px) {
-  #layout { grid-template-columns: 1fr; overflow-y: auto; }
-  #table { margin: 30px 40px 70px; min-height: 400px; }
-  #sidebar { flex-direction: row; }
-  #coach-panel, #log-panel { flex: 1; max-height: 300px; }
+  body { overflow: hidden; height: 100dvh; }
+  #layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 8px;
+    overflow: hidden;
+  }
+  #table-area { min-height: 0; }
+  #table { min-height: 220px; margin: 34px 48px 64px; }
+
+  #topbar { padding: 6px 10px; gap: 10px; flex-wrap: nowrap; }
+  .brand { font-size: 16px; white-space: nowrap; }
+  .topbar-stats { gap: 10px; flex-wrap: nowrap; overflow: hidden; }
+  .stat { font-size: 13px; white-space: nowrap; }
+  .topbar-actions { gap: 6px; }
+  .pill { padding: 6px 10px; white-space: nowrap; }
+
+  #side-tabs { display: flex; }
+  #coach-panel, #log-panel { display: none; flex: none; height: 29vh; min-height: 150px; }
+  #sidebar.show-coach #coach-panel { display: block; }
+  #sidebar.show-log #log-panel { display: block; }
+  #sidebar { gap: 6px; }
+
+  /* Reserve controls space so the table doesn't jump when the bar appears. */
+  #controls { min-height: 136px; display: flex; flex-direction: column; justify-content: center; }
+  .act { flex: 1; padding: 12px 6px; font-size: 16px; }
+  #raise-controls { flex-wrap: nowrap; }
+  .quick-sizes button { padding: 7px 9px; }
+  #raise-slider { min-width: 60px; height: 30px; }
+  #deal-bar { flex-direction: column; gap: 8px; padding: 6px; }
+  #btn-deal { width: 100%; }
 }
-@media (max-width: 640px) {
-  #table { margin: 24px 20px 70px; min-height: 340px; }
-  .seat { width: 120px; }
-  .plate { min-width: 104px; padding: 4px 7px; }
-  .avatar { font-size: 18px; }
-  .card { width: 40px; height: 58px; }
-  .card .rank { font-size: 17px; }
-  .card .suit { font-size: 15px; }
-  .card.small { width: 32px; height: 46px; }
-  #sidebar { flex-direction: column; }
+
+/* Compact seats, cards and header for narrow or short screens. */
+@media (max-width: 640px), ((max-width: 1100px) and (max-height: 540px)) {
+  .brand-text, .pill-text, .stat-blinds, #hdr-session { display: none; }
+  .pill { font-size: 16px; }
+
+  .seat { width: 108px; }
+  .plate { min-width: 92px; padding: 3px 6px; gap: 5px; }
+  .avatar { font-size: 16px; }
+  .pname { font-size: 12px; }
+  .pstyle { font-size: 9px; }
+  .pstack { font-size: 11px; }
+  .pos-badge { font-size: 9px; padding: 1px 5px; top: -8px; }
+  .bet-chip { font-size: 10px; padding: 1px 8px; margin-top: 2px; }
+  .action-tag, .hand-desc { font-size: 10px; margin-top: 2px; }
+
+  .card { width: 42px; height: 60px; }
+  .card .rank { font-size: 18px; }
+  .card .suit { font-size: 16px; }
+  .card.small { width: 30px; height: 43px; border-radius: 4px; }
+  .card.small .rank { font-size: 13px; }
+  .card.small .suit { font-size: 11px; }
+  .seat .cards { min-height: 45px; margin-bottom: 3px; }
+  .seat-0 .cards { min-height: 62px; }
+
+  .seat-0 { top: 101%; }
+  .seat-1 { left: 11%; top: 80%; }
+  .seat-2 { left: 6%;  top: 30%; }
+  .seat-3 { left: 31%; top: 2%; }
+  .seat-4 { left: 69%; top: 2%; }
+  .seat-5 { left: 94%; top: 30%; }
+  /* Tuck bot cards closer to the plates to save vertical space. */
+  .seat:not(.seat-0) .cards { margin-bottom: -4px; }
+  .seat-3 .cards, .seat-4 .cards { margin-top: -4px; margin-bottom: 0; }
+
+  #pot { font-size: 13px; padding: 3px 11px; margin-bottom: 6px; }
+  #table-msg { font-size: 12px; }
+  #board { gap: 5px; min-height: 62px; }
+  #center { top: 52%; }
+
+  #table { margin: 52px 40px 64px; }
+  .modal { padding: 18px; }
+}
+
+/* Short landscape (rotated phone): table + controls left, tabbed panel right. */
+@media (max-width: 1100px) and (max-height: 540px) {
+  body { overflow: hidden; height: 100dvh; }
+  #layout {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    grid-template-rows: minmax(0, 1fr);
+    gap: 8px;
+    padding: 8px;
+    overflow: hidden;
+  }
+  #table-area { min-height: 0; }
+  #table { min-height: 120px; margin: 44px 46px 50px; }
+
+  #topbar { padding: 4px 10px; }
+
+  #side-tabs { display: flex; }
+  .side-tab { padding: 6px; }
+  #coach-panel, #log-panel { display: none; flex: 1; height: auto; min-height: 0; }
+  #sidebar.show-coach #coach-panel { display: block; }
+  #sidebar.show-log #log-panel { display: block; }
+  #sidebar { gap: 6px; }
+
+  #controls { min-height: 0; }
+  #action-bar { padding: 6px 10px; gap: 5px; }
+  #action-info { font-size: 12px; }
+  .act { padding: 8px 6px; font-size: 14px; }
+  #deal-bar { flex-direction: row; padding: 4px; }
+  #btn-deal { width: auto; padding: 8px 20px; font-size: 14px; }
+
+  .seat-0 { top: 104%; }
+  .seat-1 { left: 13%; top: 96%; }
+  .seat-2 { left: 5%; top: 16%; }
+  .seat-5 { left: 95%; top: 16%; }
+  .seat-3 { left: 33%; top: 0%; }
+  .seat-4 { left: 67%; top: 0%; }
 }

@@ -172,6 +172,7 @@ function refreshHeader() {
 /* ===== Static UI wiring ===== */
 
 ui.initActionBar();
+ui.initSideTabs();
 
 $('btn-deal').addEventListener('click', () => { dealResolve?.(); dealResolve = null; });
 

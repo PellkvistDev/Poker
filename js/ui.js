@@ -135,6 +135,8 @@ function resolveAction(action) {
 
 export function promptAction(ctx) {
   currentCtx = ctx;
+  selectSideTab('coach'); // on small screens, bring the cues into view
+
   const bar = $('action-bar');
   bar.classList.remove('hidden');
 
@@ -161,6 +163,21 @@ export function promptAction(ctx) {
   }
 
   return new Promise((resolve) => { pendingResolve = resolve; });
+}
+
+/* ===== Sidebar tabs (mobile only; both panels are visible on desktop) ===== */
+
+export function initSideTabs() {
+  $('tab-coach').addEventListener('click', () => selectSideTab('coach'));
+  $('tab-log').addEventListener('click', () => selectSideTab('log'));
+}
+
+export function selectSideTab(name) {
+  const sidebar = $('sidebar');
+  sidebar.classList.toggle('show-coach', name === 'coach');
+  sidebar.classList.toggle('show-log', name === 'log');
+  $('tab-coach').classList.toggle('active', name === 'coach');
+  $('tab-log').classList.toggle('active', name === 'log');
 }
 
 /* ===== Coach panel ===== */
@@ -236,7 +253,7 @@ export function updateHeader({ bankroll, stats, coachOn }) {
   plEl.textContent = (pl >= 0 ? '+' : '−') + fmt(Math.abs(pl));
   plEl.style.color = pl >= 0 ? 'var(--green)' : 'var(--red)';
   const coachBtn = $('btn-coach');
-  coachBtn.textContent = `🎓 Coach: ${coachOn ? 'ON' : 'OFF'}`;
+  coachBtn.innerHTML = `🎓 <span class="pill-text">Coach: ${coachOn ? 'ON' : 'OFF'}</span>`;
   coachBtn.classList.toggle('on', coachOn);
 }
 
