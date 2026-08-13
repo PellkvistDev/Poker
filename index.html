@@ -26,7 +26,7 @@
 
   <main id="layout">
     <section id="table-area">
-      <div id="table">
+      <div id="table" class="theme-green">
         <div id="seats"></div>
         <div id="center">
           <div id="pot" class="hidden">Pot: $0</div>
@@ -84,13 +84,89 @@
   <div id="overlay-welcome" class="overlay hidden">
     <div class="modal">
       <h2>♠ Welcome to Hold'em Trainer</h2>
-      <p>You have a <strong>$10,000</strong> practice bankroll (fake money). Buy into a 6-player table for <strong>$1,000</strong> and learn by playing against five bots with very different — and clearly labeled — playing styles.</p>
+      <p>You have a <strong>$10,000</strong> practice bankroll (fake money). Buy into a 6-player table and learn by playing against five bots with distinct, clearly labeled playing styles.</p>
       <ul class="welcome-list">
         <li><strong>🎓 Coach mode</strong> shows you what to think about before every decision: position, hand strength, pot odds vs. your equity, and board dangers. A <em>suggested play</em> is hidden behind a button so you decide first.</li>
         <li><strong>📖 Guide</strong> has hand rankings, a pot-odds mini-lesson, and how to exploit each bot.</li>
         <li>Turn the coach off any time to test yourself.</li>
       </ul>
-      <button id="btn-sit" class="primary">Buy in for $1,000 and play</button>
+      <button id="btn-sit" class="primary">Buy in and play</button>
+    </div>
+  </div>
+
+  <!-- Stakes modal -->
+  <div id="overlay-stakes" class="overlay hidden">
+    <div class="modal">
+      <button class="modal-close" id="btn-stakes-close">✕</button>
+      <h2>⚙️ Select Table Stakes</h2>
+      <p>Choose your blind level. Changing stakes starts a new session.</p>
+      <div class="stakes-options">
+        <button class="stake-card" data-sb="1" data-bb="2">
+          <div class="stake-name">Micro Stakes</div>
+          <div class="stake-blinds">$1 / $2</div>
+          <div class="stake-desc">Buy-in: $200</div>
+        </button>
+        <button class="stake-card active" data-sb="5" data-bb="10">
+          <div class="stake-name">Standard Stakes</div>
+          <div class="stake-blinds">$5 / $10</div>
+          <div class="stake-desc">Buy-in: $1,000</div>
+        </button>
+        <button class="stake-card" data-sb="25" data-bb="50">
+          <div class="stake-name">High Rollers</div>
+          <div class="stake-blinds">$25 / $50</div>
+          <div class="stake-desc">Buy-in: $5,000</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats modal -->
+  <div id="overlay-stats" class="overlay hidden">
+    <div class="modal">
+      <button class="modal-close" id="btn-stats-close">✕</button>
+      <h2>📊 Session Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-val" id="st-hands">0</div>
+          <div class="stat-box-lbl">Hands Played</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="st-won">0</div>
+          <div class="stat-box-lbl">Hands Won</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="st-winrate">0%</div>
+          <div class="stat-box-lbl">Win Rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="st-coach-acc">0%</div>
+          <div class="stat-box-lbl">Coach Agreement</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="st-profit">$0</div>
+          <div class="stat-box-lbl">Total P/L</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="st-buyins">0</div>
+          <div class="stat-box-lbl">Rebuys</div>
+        </div>
+      </div>
+      <button id="btn-reset-stats" class="secondary" style="margin-top: 16px; width: 100%;">Reset Statistics</button>
+    </div>
+  </div>
+
+  <!-- Theme modal -->
+  <div id="overlay-theme" class="overlay hidden">
+    <div class="modal">
+      <button class="modal-close" id="btn-theme-close">✕</button>
+      <h2>🎨 Table Felt Theme</h2>
+      <p>Choose your preferred table appearance.</p>
+      <div class="theme-options">
+        <button class="theme-btn" data-theme="green">🟢 Classic Green</button>
+        <button class="theme-btn" data-theme="blue">🔵 Casino Blue</button>
+        <button class="theme-btn" data-theme="navy">🌙 Midnight Navy</button>
+        <button class="theme-btn" data-theme="burgundy">🍷 Burgundy Felt</button>
+      </div>
     </div>
   </div>
 
@@ -99,7 +175,7 @@
     <div class="modal">
       <h2>😅 You're out of chips</h2>
       <p id="bust-text"></p>
-      <button id="btn-rebuy" class="primary">Rebuy for $1,000</button>
+      <button id="btn-rebuy" class="primary">Rebuy</button>
       <button id="btn-reset-bankroll" class="secondary hidden">Reset bankroll to $10,000</button>
     </div>
   </div>
@@ -111,7 +187,7 @@
       <h2>📖 Quick guide</h2>
 
       <h3>How a hand works</h3>
-      <p>Two forced bets (small blind $5, big blind $10) start the pot. Everyone gets 2 private cards, then there are up to four betting rounds: <strong>preflop</strong> → <strong>flop</strong> (3 shared cards) → <strong>turn</strong> (1 more) → <strong>river</strong> (1 more). Best 5-card hand from your 2 + the 5 shared cards wins. You can also win by making everyone fold.</p>
+      <p>Two forced bets (small blind & big blind) start the pot. Everyone gets 2 private cards, then up to four betting rounds: <strong>preflop</strong> → <strong>flop</strong> (3 shared cards) → <strong>turn</strong> (1 more) → <strong>river</strong> (1 more). Best 5-card hand from your 2 + 5 shared cards wins. You can also win by making everyone fold.</p>
 
       <h3>Hand rankings (best → worst)</h3>
       <ol class="rankings">
@@ -127,31 +203,19 @@
       </ol>
 
       <h3>Position is power</h3>
-      <p>The dealer button (BTN) acts <em>last</em> after the flop — you see what everyone does before deciding. That's why you can play more hands from the button/cutoff (CO) and should play very tight from under the gun (UTG) and the blinds. The seat labels on the table (BTN, SB, BB, UTG, HJ, CO) update every hand.</p>
+      <p>The dealer button (BTN) acts <em>last</em> after the flop — you see what everyone does before deciding. That's why you can play more hands from the button/cutoff (CO) and should play very tight from under the gun (UTG) and the blinds.</p>
 
       <h3>Pot odds in 20 seconds</h3>
-      <p>If you must call <strong>$20</strong> into an <strong>$80</strong> pot, you're paying 20 to win 100 → you need to win <strong>20%</strong> of the time to break even. Compare that to your chance of winning (the coach estimates it for you). Rule of thumb for draws: <strong>outs × 4</strong> ≈ your % on the flop (two cards to come), <strong>outs × 2</strong> on the turn.</p>
+      <p>If you must call <strong>$20</strong> into an <strong>$80</strong> pot, you're paying 20 to win 100 → you need to win <strong>20%</strong> of the time to break even. Rule of thumb for draws: <strong>outs × 4</strong> ≈ your % on the flop (two cards to come), <strong>outs × 2</strong> on the turn.</p>
 
       <h3>Know your opponents</h3>
       <ul>
-        <li><strong>🪨 Rocky (tight & careful)</strong> — barely plays a hand. When he bets big, fold unless you're huge. Steal his blinds.</li>
+        <li><strong>🪨 Rocky (tight & careful)</strong> — barely plays a hand. When he bets big, fold unless you're strong. Steal his blinds.</li>
         <li><strong>🦈 Tanya (tight-aggressive)</strong> — the dangerous one. Solid hands, played hard. Avoid marginal spots against her.</li>
-        <li><strong>🃏 Loco (loose & wild)</strong> — raises with anything. Call down lighter, let him bluff into you, don't try to out-bluff him.</li>
-        <li><strong>📞 Callie (calling station)</strong> — never folds. <em>Never bluff her.</em> Value-bet even medium hands relentlessly.</li>
-        <li><strong>🎩 Prof (solid all-round)</strong> — balanced. Play straightforward poker.</li>
+        <li><strong>🃏 Loco (loose & wild)</strong> — plays anything, bluffs often. Call down lighter and let him hang himself.</li>
+        <li><strong>📞 Callie (calling station)</strong> — never folds a pair. Value bet heavily, never bluff.</li>
+        <li><strong>🎩 Prof (solid all-round)</strong> — balanced play, respects aggression.</li>
       </ul>
-
-      <h3>Beginner rules of thumb</h3>
-      <ul>
-        <li>Fold most hands preflop. Tight is right while learning.</li>
-        <li>Enter pots with a raise, not a limp (call).</li>
-        <li>Bet your strong hands — don't "trap" as a habit; free cards beat you.</li>
-        <li>When a tight player raises you back, believe them.</li>
-        <li>Judge your decisions, not the result of one hand. Good decisions win over time.</li>
-      </ul>
-
-      <h3>Glossary</h3>
-      <p class="glossary"><strong>Check</strong> pass without betting · <strong>Call</strong> match the bet · <strong>Raise</strong> increase the bet · <strong>All-in</strong> bet everything · <strong>Equity</strong> your % chance to win the pot · <strong>Outs</strong> cards that complete your draw · <strong>C-bet</strong> a follow-up bet by the preflop raiser · <strong>Set</strong> three of a kind using a pocket pair · <strong>Range</strong> all hands someone could hold.</p>
     </div>
   </div>
 
