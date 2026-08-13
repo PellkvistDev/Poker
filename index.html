@@ -12,10 +12,12 @@
     <div class="brand">♠ <span class="brand-text">Hold'em Trainer</span></div>
     <div class="topbar-stats">
       <span class="stat"><span class="stat-label">Bankroll</span> <span id="hdr-bankroll">$0</span></span>
-      <span class="stat stat-blinds"><span class="stat-label">Blinds</span> <span id="hdr-blinds">$5/$10</span></span>
-      <span class="stat" id="hdr-session" title="Session results"><span class="stat-label">Hands</span> <span id="hdr-hands">0</span> · <span class="stat-label">Won</span> <span id="hdr-won">0</span> · <span id="hdr-pl">$0</span></span>
+      <span class="stat stat-blinds" id="hdr-blinds-btn" title="Click to change stakes"><span class="stat-label">Blinds</span> <span id="hdr-blinds">$5/$10</span> ▾</span>
+      <span class="stat stat-session" id="hdr-session-btn" title="Click for session stats & history"><span class="stat-label">Hands</span> <span id="hdr-hands">0</span> · <span class="stat-label">Won</span> <span id="hdr-won">0</span> · <span id="hdr-pl">$0</span> 📊</span>
     </div>
     <div class="topbar-actions">
+      <button id="btn-sound" class="pill" title="Toggle sound">🔊</button>
+      <button id="btn-theme" class="pill" title="Change table theme">🎨</button>
       <button id="btn-coach" class="pill on">🎓 <span class="pill-text">Coach: ON</span></button>
       <button id="btn-guide" class="pill">📖 <span class="pill-text">Guide</span></button>
       <button id="btn-cashout" class="pill">💰 <span class="pill-text">Cash out</span></button>
