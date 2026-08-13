@@ -1,4 +1,80 @@
-/* ===== Base ===== */
+/* ===== Themes ===== */
+#table.theme-green {
+  background: radial-gradient(ellipse at center, #1d6b45 0%, #145032 75%);
+  border-color: #3a2c1c;
+}
+#table.theme-blue {
+  background: radial-gradient(ellipse at center, #1e548a 0%, #12375d 75%);
+  border-color: #2b3e50;
+}
+#table.theme-navy {
+  background: radial-gradient(ellipse at center, #1c2b36 0%, #0e161c 75%);
+  border-color: #2c3e50;
+}
+#table.theme-burgundy {
+  background: radial-gradient(ellipse at center, #7a2835 0%, #4d1821 75%);
+  border-color: #3b201a;
+}
+
+/* Stakes options */
+.stakes-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.stake-card {
+  background: var(--panel-2);
+  border: 2px solid #34414f;
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+  color: var(--text);
+  cursor: pointer;
+  transition: all .2s;
+}
+.stake-card:hover { border-color: var(--gold); background: #26323e; }
+.stake-card.active { border-color: var(--gold); background: rgba(212,175,55,.1); }
+.stake-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+.stake-blinds { font-size: 16px; color: var(--gold); font-weight: 800; margin-bottom: 4px; }
+.stake-desc { font-size: 11px; color: var(--muted); }
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.stat-box {
+  background: var(--panel-2);
+  border: 1px solid #34414f;
+  border-radius: var(--radius);
+  padding: 12px;
+  text-align: center;
+}
+.stat-box-val { font-size: 20px; font-weight: 800; color: var(--gold); margin-bottom: 2px; }
+.stat-box-lbl { font-size: 12px; color: var(--muted); }
+
+/* Theme buttons */
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.theme-btn {
+  background: var(--panel-2);
+  border: 2px solid #34414f;
+  border-radius: var(--radius);
+  padding: 12px;
+  color: var(--text);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+.theme-btn:hover { border-color: var(--gold); }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
